@@ -25,13 +25,13 @@ def main():
     plt.show()
     mst = MorphologicalSkeletonTransform()
     if len(sys.argv[1:]) == 0:
-        sys.argv[1:] = ["deer.png", "dog.png", "butterfly.png", "lamp.png", "fish.png"]
+        sys.argv[1:] = ["Data/deer.png", "Data/dog.png", "Data/butterfly.png", "Data/lamp.png", "Data/fish.png"]
     
 
     imgs = []
     for arg in sys.argv[1:]:
         print(arg)
-        imgs.append(cv2.imread("Data/" + arg))
+        imgs.append(cv2.imread(arg))
     for X in imgs:
         
         ## preprocessing step...
