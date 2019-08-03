@@ -30,7 +30,6 @@ def main():
 
     imgs = []
     for arg in sys.argv[1:]:
-        print(arg)
         imgs.append(cv2.imread(arg))
     for X in imgs:
         
