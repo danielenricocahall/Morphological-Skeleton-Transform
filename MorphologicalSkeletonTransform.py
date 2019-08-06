@@ -11,7 +11,7 @@ class MorphologicalSkeletonTransform():
         
     def computeSkeletonSubsets(self, X, B):
         S = []
-        X_n = X        
+        X_n = X       
         while np.count_nonzero(X_n) > 0:
             X_prev = X_n
             X_n = binary_erosion(X_n, B)
@@ -20,20 +20,18 @@ class MorphologicalSkeletonTransform():
         return S
     
     def reconstructImage(self, S, X, B):
-        X_reconstructed = np.zeros((X.shape[0], X.shape[1]), dtype = np.uint8)
-        B_n = np.zeros((X.shape[0], X.shape[1]), dtype = np.uint8)
-        center = int(X.shape[0]/2) , int(X.shape[1]/2) 
-        B_n[center[0] - int(B.shape[0]/2):center[0]+ int(B.shape[0]/2), 
-            center[1]-int(B.shape[1]/2):center[1] + int(B.shape[1]/2)] = B
+        w, h = X.shape[0], X.shape[1]
+        X_reconstructed = np.zeros((w, h), dtype = np.uint8)
         reconstructions = []
         components = []
         
+        
         for n,s in enumerate(S):
             if n > 0:
-                component = binary_dilation(s, B_n[center[0] - n*int(B.shape[0]/2):center[0]+ n*int(B.shape[0]/2), 
-                                             center[1]-n*int(B.shape[1]/2):center[1] + n*int(B.shape[1]/2)])
+                component = s
+                for _ in range(n):
+                    component = binary_dilation(component,B)
                 X_reconstructed = np.logical_or(X_reconstructed, component)
-                B_n = binary_dilation(B_n, B)
             else:
                 X_reconstructed = np.logical_or(X_reconstructed, s)
                 component = s
