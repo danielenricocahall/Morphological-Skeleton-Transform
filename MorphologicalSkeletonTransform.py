@@ -20,21 +20,15 @@ class MorphologicalSkeletonTransform():
         return S
     
     def reconstructImage(self, S, X, B):
-        w, h = X.shape[0], X.shape[1]
-        X_reconstructed = np.zeros((w, h), dtype = np.uint8)
+        X_reconstructed = np.zeros((X.shape[0], X.shape[1]), dtype = np.uint8)
         reconstructions = []
         components = []
         
-        
         for n,s in enumerate(S):
-            if n > 0:
-                component = s
-                for _ in range(n):
-                    component = binary_dilation(component,B)
-                X_reconstructed = np.logical_or(X_reconstructed, component)
-            else:
-                X_reconstructed = np.logical_or(X_reconstructed, s)
-                component = s
+            component = s
+            for _ in range(n):
+                component = binary_dilation(component,B)
+            X_reconstructed = np.logical_or(X_reconstructed, component)
             components.append(component)
             reconstructions.append(X_reconstructed)
         return (components, reconstructions)
