@@ -11,7 +11,7 @@ class MorphologicalSkeletonTransform():
         
     def computeSkeletonSubsets(self, X, B):
         S = []
-        X_n = X       
+        X_n = X 
         while np.count_nonzero(X_n) > 0:
             X_prev = X_n
             X_n = cv2.erode(X_n, B)
@@ -20,17 +20,11 @@ class MorphologicalSkeletonTransform():
         return S
     
     def reconstructImage(self, S, X, B):
-        X_reconstructed = np.zeros((X.shape[0], X.shape[1]), dtype = np.uint8)
+        X_reconstructed = np.zeros_like(X, dtype = np.uint8)
         reconstructions = []
         components = []
-        
         for n,s in enumerate(S):
-            component = s
             component = cv2.dilate(s, B, iterations = n)
-            """
-            for _ in range(n):
-                component = cv2.dilate(component,B)
-            """
             X_reconstructed = np.logical_or(X_reconstructed, component)
             components.append(component)
             reconstructions.append(X_reconstructed)
