@@ -6,19 +6,12 @@ Created on Feb 22, 2019
 from MorphologicalSkeletonTransform import MorphologicalSkeletonTransform
 import sys
 import cv2
-from skimage.filters import threshold_otsu
-from skimage.color import rgb2gray
 import numpy as np
 import matplotlib.pyplot as plt
+import cv2
 
 def main():
-    B = np.zeros((4,4), dtype = np.uint8)
-    B[0,1:3] = 1
-    B[1,:] = 1
-    B[2,:] = 1
-    B[3, 1:3] = 1
-
-    
+    B = cv2.getStructuringElement(cv2.MORPH_CROSS, (5,5))
     plt.imshow(B)
     plt.gray()
     plt.title("Structuring Element")
@@ -35,9 +28,9 @@ def main():
         
         ## preprocessing step...
         X = np.bitwise_not(X)
-        X = rgb2gray(X)
-        threshold_global_otsu = threshold_otsu(X)
-        X = X >= threshold_global_otsu
+        X = cv2.cvtColor(X, cv2.COLOR_BGR2GRAY)
+        _,X = cv2.threshold(X, 0, 255, cv2.THRESH_OTSU)
+        #X = X >= threshold_global_otsu
         
         S = mst.computeSkeletonSubsets(X, B)
         

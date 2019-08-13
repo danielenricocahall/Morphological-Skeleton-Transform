@@ -5,7 +5,7 @@ Created on Feb 22, 2019
 '''
 
 import numpy as np
-from skimage.morphology import binary_dilation, binary_erosion
+import cv2
 
 class MorphologicalSkeletonTransform():
         
@@ -14,8 +14,8 @@ class MorphologicalSkeletonTransform():
         X_n = X       
         while np.count_nonzero(X_n) > 0:
             X_prev = X_n
-            X_n = binary_erosion(X_n, B)
-            S_n = np.logical_and(X_prev, np.logical_not(binary_dilation(X_n, B)))
+            X_n = cv2.erode(X_n, B)
+            S_n = X_prev - cv2.dilate(X_n, B)
             S.append(S_n)
         return S
     
@@ -26,8 +26,11 @@ class MorphologicalSkeletonTransform():
         
         for n,s in enumerate(S):
             component = s
+            component = cv2.dilate(s, B, iterations = n)
+            """
             for _ in range(n):
-                component = binary_dilation(component,B)
+                component = cv2.dilate(component,B)
+            """
             X_reconstructed = np.logical_or(X_reconstructed, component)
             components.append(component)
             reconstructions.append(X_reconstructed)
